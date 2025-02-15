@@ -104,7 +104,7 @@ services:
     container_name: php_container
     restart: always
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html
     ports:
       - "8080:80"
     depends_on:
