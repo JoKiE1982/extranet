@@ -1,0 +1,46 @@
+# Levantar los servicios: docker-compose up -d
+# Detener los servicios: docker-compose down
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: extranet
+      MYSQL_USER: extranet
+      MYSQL_PASSWORD: chesscoimbra
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+
+  php:
+    build:
+      context: .  # Usará el Dockerfile
+      dockerfile: Dockerfile
+    container_name: php_container
+    restart: always
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+
+volumes:
+  db:
